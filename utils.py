@@ -7,6 +7,7 @@ import torch.utils.data as Data
 from torch.utils.data import DataLoader
 import torch
 from sklearn.model_selection import train_test_split
+import cv2
 
 batch_size = 100
 
@@ -76,11 +77,13 @@ def load_mnist(data_size = 0.1):
     y_test = npzfile['y_test']
     _, X_train, _,  y_train = train_test_split(X_train, y_train, test_size=data_size)
     _, X_test, _, y_test = train_test_split(X_test, y_test, test_size=data_size)
-    X_train_true = np.zeros(shape=(len(X_train), 784), dtype=float)
-    X_test_true = np.zeros(shape=(len(X_test), 784), dtype=float)
+    X_train_true = np.zeros(shape=(len(X_train), 196), dtype=float)
+    X_test_true = np.zeros(shape=(len(X_test), 196), dtype=float)
     for index, sample in enumerate(X_train):
+        sample = cv2.resize(sample, dsize=(14, 14), interpolation=cv2.INTER_CUBIC)
         X_train_true[index] = ((sample.reshape(-1)).astype(float) / 255)
     for index, sample in enumerate(X_test):
+        sample = cv2.resize(sample, dsize=(14, 14), interpolation=cv2.INTER_CUBIC)
         X_test_true[index] = sample.reshape(-1).astype(float) / 255
     test_labels = []
     y_train_obfuscated = []

@@ -13,49 +13,61 @@ import pandas as pd
 from test import nnclassifier
 import numpy as np
 from test import launchtime
+import os
 
 k_cluster = 10
-
 acc_knn = []
 acc_lda_gmm = []
 #acc_bayes = []
 acc_lda_mom = []
 acc_nn = []
-iters = [0.05, 0.4, 0.6, 0.8, 1.0]
+iters = [0.2, 0.4, 0.6, 0.8, 1.0]
+a = np.exp(200)*np.ones(shape=(1,1))
+
+# for i in iters:
+#     acc_nn.append([])
+#     n = 50000 * i
+#     for j in range(2):
+#         X_train, y_train_sub, X_test, y_test = load_mnist(i)
+#         data_loader = load_fromXY(X_train, y_train_sub)
+#         model = nnclassifier()
+#         model.fit(data_loader, j)
+#         y_pred = model.predict(X_test)
+#         acc = accuracy_score(y_pred, y_test)
+#         acc_nn[-1].append(acc)
+#         print('NN:', acc, 'n:', n)
+
+# for i in iters:
+#     acc_knn.append([])
+#     n = 50000 * i
+#     for j in range(2):
+#         model = knn_subsetlabels(int(2 * np.sqrt(n)))
+#         model.fit(X_train, y_train_sub)
+#         y_pred = model.predict(X_test)
+#         acc = accuracy_score(y_pred, y_test)
+#         acc_knn[-1].append(acc)
+#         print('knn:', acc, 'n:', n)
 
 for i in iters:
-    acc_knn.append([])
     acc_lda_gmm.append([])
     acc_lda_mom.append([])
-    acc_nn.append([])
     n = 50000 * i
     for j in range(2):
         X_train, y_train_sub, X_test, y_test = load_mnist(i)
-        model = knn_subsetlabels(int(2 * np.sqrt(n)))
-        model.fit(X_train, y_train_sub)
-        y_pred = model.predict(X_test)
-        acc = accuracy_score(y_pred, y_test)
-        print('knn:', acc, 'n:', n)
-        acc_knn[-1].append(acc)
         gmm_model = MyGMM(k_cluster)
         gmm_model.fit(X_train, y_train_sub)
         y_pred = gmm_model.predict(X_test)
         acc = accuracy_score(y_pred, y_test)
         acc_lda_gmm[-1].append(acc)
-        print('LDA with GMM:', acc)
-        LDA_sub = MyLDA(k_cluster)
-        LDA_sub.fit(X_train, y_train_sub)
-        y_pred = LDA_sub.predict(X_test)
-        acc = accuracy_score(y_pred, y_test)
-        acc_lda_mom[-1].append(acc)
-        print('LDA with MoM:', acc)
-        data_loader = load_fromXY(X_train, y_train_sub)
-        model = nnclassifier(data_loader)
-        model.fit(data_loader, j)
-        y_pred = model.predict(X_test)
-        acc = accuracy_score(y_pred, y_test)
-        acc_nn[-1].append(acc)
-        print('NN:', acc)
+        print('LDA with GMM:', acc, 'n:', n)
+        # LDA_sub = MyLDA(k_cluster)
+        # LDA_sub.fit(X_train, y_train_sub)
+        # y_pred = LDA_sub.predict(X_test)
+        # acc = accuracy_score(y_pred, y_test)
+        # acc_lda_mom[-1].append(acc)
+        # print('LDA with MoM:', acc, 'n:', n)
+        
+        
 
 
 acc_knn_avg = np.mean(np.array(acc_knn), axis=1)

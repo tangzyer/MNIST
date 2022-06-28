@@ -1,10 +1,11 @@
 import numpy as np
 from numpy import *
+from scipy.special import logsumexp
 
 class MyLDA(object):
     def __init__(self, k_cluster=4):
         self.K = k_cluster
-        self.w = np.ones(self.K)
+        self.w = np.ones(self.K).astype(np.float16)
         self.w = self.w / np.sum(self.w)
 
     def fit(self, x, label):
@@ -26,7 +27,7 @@ class MyLDA(object):
             C[i] = np.mean(B[i], axis=0, keepdims=True)[0]
         A = np.array(A)
         C = np.array(C)
-        self.mu = np.dot(np.dot(np.linalg.inv(np.dot(A.T, A)), A.T), C)
+        self.mu = np.dot(np.dot(np.linalg.inv(np.dot(A.T, A).astype(float64)), A.T), C)
         C = np.dot(A, self.mu)
         A = [[] for a in A]
         #B = [[]]*len(A)
@@ -59,6 +60,11 @@ class MyLDA(object):
         A = np.array(A)
         D = np.array(D)
         self.var = np.mean(A-D, axis=0, keepdims=True)[0]
+        a, _ = np.linalg.eig(self.var)
+        min_eig = np.min(np.real(a))
+        if min_eig < 0:
+            self.var -= 2* min_eig * np.eye(*self.var.shape)
+        pass
         # print("mean:", self.mu)
         # print("var:", self.var)
 

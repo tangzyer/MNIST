@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.stats import multivariate_normal
 np.random.seed(None)
+from scipy.special import logsumexp
 
 
 class MyGMM(object):
@@ -32,7 +33,7 @@ class MyGMM(object):
         alpha = np.ones((self.K, 1))
         alpha = alpha / np.sum(alpha)
         mu = np.random.rand(self.K, self.D)
-        Sigma = np.diag([1.0]*self.D)
+        Sigma = np.diag([0.2]*self.D).astype(np.float64)
         # 虽然gamma有约束条件，但是第一步E步时会对此重新赋值，所以可以随意初始化
         gamma = np.random.rand(self.N, self.K)
 
@@ -54,13 +55,14 @@ class MyGMM(object):
         # 先取对数
         n_1 = self.D * np.log(2 * np.pi)
         # 计算数组行列式的符号和（自然）对数。
+
         _, n_2 = np.linalg.slogdet(Sigma_k)
 
         # 计算矩阵的（乘法）逆矩阵。
         n_3 = np.dot(np.dot((y_j - mu_k).T, np.linalg.inv(Sigma_k)), y_j - mu_k)
 
         # 返回是重新取指数抵消前面的取对数操作
-        return np.exp(-0.5 * (n_1 + n_2 + n_3))
+        return np.exp(-0.5 * (n_1 + n_2 + n_3)+200)
 
     def _E_step(self, x, label):
         mu = self.params['mu']
@@ -72,15 +74,25 @@ class MyGMM(object):
         #         pr_a.append(np.sum(self.params['alpha'][label[j]]))
         #     pr_a = np.array(pr_a)
         for i in range(self.K):
-            self.params['gamma'][:, i] = self.params['alpha'][i] * multivariate_normal.pdf(x, mean=mu[i], cov=Sigma, allow_singular=True)
+            # a = mu[i]
+            # c = Sigma
+            t = multivariate_normal.pdf(x, mean=mu[i], cov=Sigma, allow_singular=True)
+            # t = self._gaussian_function(x[1], a, c)
+            self.params['gamma'][:, i] = np.log(self.params['alpha'][i]) + multivariate_normal.logpdf(x, mean=mu[i], cov=Sigma, allow_singular=True)
+            if np.isnan(self.params['gamma']).any():
+                pass
         mask = np.array(np.array(label, dtype=bool))
-        self.params['gamma'] = np.ma.array(self.params['gamma'], mask=~mask).filled(0)
-        self.params['gamma'] /= self.params['gamma'].sum(axis=1, keepdims=True)
+        self.params['gamma'] = np.ma.array(self.params['gamma'], mask=~mask).filled(-np.inf)
+        self.params['gamma'] -= logsumexp(self.params['gamma'], axis=1, keepdims=True)
+        #self.params['']
+        if np.isnan(self.params['gamma']).any():
+            pass
 
     def _M_step(self, x, label):
         mu = self.params['mu']
-        gamma = self.params['gamma']
-        Sigma_list = []
+        gamma = np.exp(self.params['gamma'])
+        self.params['Sigma'][:,:]=0
+        #Sigma_list = []
         for k in range(self.K):
             mu_k = mu[k]
             gamma_k = gamma[:, k]
@@ -94,20 +106,35 @@ class MyGMM(object):
                     gamma_k_j_list.append(gamma_k_j)
                     # mu_k的分母的分母列表
                     mu_k_part_list.append(gamma_k_j * x_j)
-                    Sigma_list.append(gamma_k_j * np.outer(x_j - mu_k, (x_j - mu_k).T))
+                    sigma_j = np.outer((x_j - mu_k).T, (x_j-mu_k))
+                    self.params['Sigma'] += gamma_k_j * sigma_j / self.N
+                    if np.isnan(self.params['Sigma']).any():
+                        pass
+                    #Sigma_list.append(gamma_k_j * sigma_j)
                     # Sigma_k的分母列表
             # 对模型参数进行迭代更新
             self.params['mu'][k] = np.sum(mu_k_part_list, axis=0) / np.sum(gamma_k_j_list)
-        self.params['Sigma'] = np.sum(Sigma_list, axis=0) / self.N
+        min_eig = np.min(np.real(np.linalg.eigvals(self.params['Sigma'])))
+        if min_eig < 0:
+            self.params['Sigma'] -= 10* min_eig * np.eye(*self.params['Sigma'].shape)
+        #self.params['Sigma'] = np.sum(Sigma_list, axis=0) / self.N
             #self.params['alpha'][k] = np.sum(gamma_k_j_list) / self.N
 
-    def fit(self, x, label, max_iter=300):
+    def fit(self, x, label, max_iter=1000):
         x = np.array(x)
         self.N, self.D = x.shape
         self.__init_params()
         for _ in range(max_iter):
+            gamma = self.params['gamma']
             self._E_step(x, label)
             self._M_step(x, label)
+            gamma_new =  self.params['gamma']
+            a = np.linalg.norm(gamma_new-gamma)
+            if a < 0.01:
+                pass
+            pass
+            # if np.linalg.norm(mu_1-mu_2) < 0.05:
+            #     break
 
     def predict(self, X):
         mu = self.params['mu']
@@ -117,7 +144,7 @@ class MyGMM(object):
             prob_singular = []
             for k in range(self.K):
                 mu_k = mu[k]
-                prob_singular.append(multivariate_normal.pdf(x, mean=mu_k, cov=Sigma, allow_singular=True))
+                prob_singular.append(multivariate_normal.logpdf(x, mean=mu_k, cov=Sigma, allow_singular=True))
             prediction.append(np.array(prob_singular).argmax())
         return prediction
 

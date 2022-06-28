@@ -12,8 +12,8 @@ from utils import load_mnist
 
 sub = Subset(10)
 batch_size = 100
-learning_rate = 0.001
-launchtime = '06271644'
+learning_rate = 0.1
+launchtime = '06282231'
 
 
 #a = torchvision.datasets.FashionMNIST(root='.', download=True)
@@ -22,7 +22,7 @@ launchtime = '06271644'
 
 # N is batch size; D_in is input dimension;
 # H is hidden dimension; D_out is output dimension.
-N, D_in, H, D_out = 64, 784, 300, 10
+N, D_in, H, D_out = 64, 194, 300, 10
 
 
 class Activation_Net(nn.Module):
@@ -58,8 +58,8 @@ epochs = 16
 
 class nnclassifier(object):
 
-    def __init__(self, max_iters=32):
-        self.model = Activation_Net(28 * 28, 130, 26, 10).float()
+    def __init__(self, max_iters=512):
+        self.model = Activation_Net(14*14, 100, 26, 10).float()
         self.max_iters = max_iters
         self.loss = []
 
@@ -72,7 +72,7 @@ class nnclassifier(object):
     def fit(self, train_loader, index):
         optimizer = torch.optim.SGD(self.model.parameters(), lr=learning_rate, momentum=0.9, weight_decay=1e-4)
         criterion = LogEntropyLoss()
-        for epoch in range(self.max_iters):
+        for _ in range(self.max_iters):
             loss = self.train(train_loader, optimizer, criterion)
             self.loss.append(loss)
         pass
