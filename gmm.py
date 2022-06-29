@@ -2,7 +2,7 @@ import numpy as np
 from scipy.stats import multivariate_normal
 np.random.seed(None)
 from scipy.special import logsumexp
-
+import copy
 
 class MyGMM(object):
     def __init__(self, K=3):
@@ -124,15 +124,16 @@ class MyGMM(object):
         x = np.array(x)
         self.N, self.D = x.shape
         self.__init_params()
-        for _ in range(max_iter):
-            gamma = self.params['gamma']
+        for i in range(max_iter):
+            gamma = copy.deepcopy(self.params['gamma'])
             self._E_step(x, label)
             self._M_step(x, label)
-            gamma_new =  self.params['gamma']
-            a = np.linalg.norm(gamma_new-gamma)
-            if a < 0.01:
-                pass
-            pass
+            gamma_new =  copy.deepcopy(self.params['gamma'])
+            a = np.linalg.norm(np.exp(gamma)-np.exp(gamma_new))
+            if a < 0.02:
+                print(a,i)
+                break
+            
             # if np.linalg.norm(mu_1-mu_2) < 0.05:
             #     break
 

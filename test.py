@@ -13,7 +13,7 @@ from utils import load_mnist
 sub = Subset(10)
 batch_size = 100
 learning_rate = 0.1
-launchtime = '06282231'
+launchtime = '06290918'
 
 
 #a = torchvision.datasets.FashionMNIST(root='.', download=True)
@@ -58,8 +58,8 @@ epochs = 16
 
 class nnclassifier(object):
 
-    def __init__(self, max_iters=512):
-        self.model = Activation_Net(14*14, 100, 26, 10).float()
+    def __init__(self, max_iters=300):
+        self.model = Activation_Net(14*14, 130, 26, 10).float()
         self.max_iters = max_iters
         self.loss = []
 
