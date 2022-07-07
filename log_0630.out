@@ -1,0 +1,31 @@
+9.119755713105082e-06 145
+LDA with GMM: 0.725 n: 5000.0
+LDA with MoM: 0.789 n: 5000.0
+9.774336828744665e-06 267
+LDA with GMM: 0.741 n: 5000.0
+LDA with MoM: 0.768 n: 5000.0
+9.535655651149959e-06 300
+LDA with GMM: 0.602 n: 5000.0
+LDA with MoM: 0.771 n: 5000.0
+9.465775536689428e-06 265
+LDA with GMM: 0.7166666666666667 n: 15000.0
+LDA with MoM: 0.781 n: 15000.0
+9.554734934084417e-06 283
+LDA with GMM: 0.778 n: 15000.0
+LDA with MoM: 0.7036666666666667 n: 15000.0
+9.99387280181832e-06 171
+LDA with GMM: 0.79 n: 15000.0
+LDA with MoM: 0.8073333333333333 n: 15000.0
+9.538739253724026e-06 197
+LDA with GMM: 0.697 n: 25000.0
+Traceback (most recent call last):
+  File "/home/ec2-user/experiments/MNIST/main.py", line 82, in <module>
+    y_pred = LDA_sub.predict(X_test)
+  File "/home/ec2-user/experiments/MNIST/LDA.py", line 78, in predict
+    prob = x.dot(np.linalg.inv(self.var)).dot(self.mu[i].T)-0.5*self.mu[i].dot(np.linalg.inv(self.var)).dot(self.mu[i].T)+np.log(self.w[i])
+  File "<__array_function__ internals>", line 180, in inv
+  File "/opt/conda/envs/pytorch/lib/python3.9/site-packages/numpy/linalg/linalg.py", line 552, in inv
+    ainv = _umath_linalg.inv(a, signature=signature, extobj=extobj)
+  File "/opt/conda/envs/pytorch/lib/python3.9/site-packages/numpy/linalg/linalg.py", line 89, in _raise_linalgerror_singular
+    raise LinAlgError("Singular matrix")
+numpy.linalg.LinAlgError: Singular matrix

@@ -60,17 +60,19 @@ class MyLDA(object):
         A = np.array(A)
         D = np.array(D)
         self.var = np.mean(A-D, axis=0, keepdims=True)[0]
-        a, _ = np.linalg.eig(self.var)
-        min_eig = np.min(np.real(a))
-        if min_eig < 0:
-            self.var -= 2* min_eig * np.eye(*self.var.shape)
-        pass
+        
         # print("mean:", self.mu)
         # print("var:", self.var)
 
 
     def predict(self, X):
         preds = []
+        a, _ = np.linalg.eig(self.var)
+        min_eig = np.min(np.real(a))
+        if min_eig < 1e-10:
+            self.var -= 10*min(-1e-11,min_eig)*np.eye(*self.var.shape)
+        a, _ = np.linalg.eig(self.var)
+        min_eig = np.min(np.real(a))
         for x in X:
             x = np.array(x)
             probs = []

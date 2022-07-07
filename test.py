@@ -13,7 +13,7 @@ from utils import load_mnist
 sub = Subset(10)
 batch_size = 100
 learning_rate = 0.1
-launchtime = '06290918'
+launchtime = '08071955'
 
 
 #a = torchvision.datasets.FashionMNIST(root='.', download=True)

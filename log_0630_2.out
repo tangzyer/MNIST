@@ -1,0 +1,17 @@
+9.901162547899706e-05 143
+LDA with GMM: 0.673 n: 5000.0
+LDA with MoM: 0.779 n: 5000.0
+8.127071893608793e-05 83
+LDA with GMM: 0.715 n: 5000.0
+LDA with MoM: 0.766 n: 5000.0
+9.473709385124168e-05 165
+LDA with GMM: 0.634 n: 5000.0
+LDA with MoM: 0.803 n: 5000.0
+Traceback (most recent call last):
+  File "/home/ec2-user/experiments/MNIST/main.py", line 75, in <module>
+    gmm_model.fit(X_train, y_train_sub)
+  File "/home/ec2-user/experiments/MNIST/gmm.py", line 130, in fit
+    self._M_step(x, label)
+  File "/home/ec2-user/experiments/MNIST/gmm.py", line 110, in _M_step
+    self.params['Sigma'] += gamma_k_j * sigma_j / self.N
+KeyboardInterrupt

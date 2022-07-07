@@ -80,10 +80,12 @@ def load_mnist(data_size = 0.1):
     X_train_true = np.zeros(shape=(len(X_train), 196), dtype=float)
     X_test_true = np.zeros(shape=(len(X_test), 196), dtype=float)
     for index, sample in enumerate(X_train):
-        sample = cv2.resize(sample, dsize=(14, 14), interpolation=cv2.INTER_CUBIC)
+        sample = cv2.resize(sample, dsize=(14, 14), interpolation=cv2.INTER_AREA)
+        # if index % 1000 == 0:
+        #     cv2.imwrite('./images/'+str(index)+'_'+str(y_train[index])+'.jpg', sample)
         X_train_true[index] = ((sample.reshape(-1)).astype(float) / 255)
     for index, sample in enumerate(X_test):
-        sample = cv2.resize(sample, dsize=(14, 14), interpolation=cv2.INTER_CUBIC)
+        sample = cv2.resize(sample, dsize=(14, 14), interpolation=cv2.INTER_AREA)
         X_test_true[index] = sample.reshape(-1).astype(float) / 255
     test_labels = []
     y_train_obfuscated = []

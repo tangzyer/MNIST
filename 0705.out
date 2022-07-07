@@ -1,0 +1,28 @@
+/opt/conda/envs/pytorch/lib/python3.9/site-packages/numpy/core/fromnumeric.py:3432: RuntimeWarning: Mean of empty slice.
+  return _methods._mean(a, axis=axis, dtype=dtype,
+/opt/conda/envs/pytorch/lib/python3.9/site-packages/numpy/core/_methods.py:182: RuntimeWarning: invalid value encountered in divide
+  ret = um.true_divide(
+/opt/conda/envs/pytorch/lib/python3.9/site-packages/numpy/core/_methods.py:265: RuntimeWarning: Degrees of freedom <= 0 for slice
+  ret = _var(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+/opt/conda/envs/pytorch/lib/python3.9/site-packages/numpy/core/_methods.py:223: RuntimeWarning: invalid value encountered in divide
+  arrmean = um.true_divide(arrmean, div, out=arrmean, casting='unsafe',
+/opt/conda/envs/pytorch/lib/python3.9/site-packages/numpy/core/_methods.py:254: RuntimeWarning: invalid value encountered in divide
+  ret = um.true_divide(
+8.318782304939561e-05 106
+LDA with GMM: 0.7294 n: 25000.0
+9.792448293202219e-05 143
+LDA with GMM: 0.7348 n: 25000.0
+9.215021320857896e-05 174
+LDA with GMM: 0.688 n: 25000.0
+9.612208415048435e-05 127
+LDA with GMM: 0.7145714285714285 n: 35000.0
+8.502414416576833e-05 109
+LDA with GMM: 0.7421428571428571 n: 35000.0
+9.891759658220662e-05 108
+LDA with GMM: 0.7531428571428571 n: 35000.0
+9.473727660022285e-05 140
+LDA with GMM: 0.7548888888888889 n: 45000.0
+9.323811702546647e-05 68
+LDA with GMM: 0.7478888888888889 n: 45000.0
+9.928693044441506e-05 38
+LDA with GMM: 0.7564444444444445 n: 45000.0

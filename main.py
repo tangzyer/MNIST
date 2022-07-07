@@ -24,26 +24,26 @@ acc_nn = []
 iters = [0.1, 0.3, 0.5, 0.7, 0.9]
 a = np.exp(200)*np.ones(shape=(1,1))
 
-for i in iters:
-    acc_nn.append([])
-    n = 50000 * i
-    for j in range(3):
-        X_train, y_train_sub, X_test, y_test = load_mnist(i)
-        data_loader = load_fromXY(X_train, y_train_sub)
-        model = nnclassifier()
-        model.fit(data_loader, j)
-        y_pred = model.predict(X_test)
-        acc = accuracy_score(y_pred, y_test)
-        acc_nn[-1].append(acc)
-        print('NN:', acc, 'n:', n)
+# for i in iters:
+#     acc_nn.append([])
+#     n = 50000 * i
+#     for j in range(3):
+#         X_train, y_train_sub, X_test, y_test = load_mnist(i)
+#         data_loader = load_fromXY(X_train, y_train_sub)
+#         model = nnclassifier()
+#         model.fit(data_loader, j)
+#         y_pred = model.predict(X_test)
+#         acc = accuracy_score(y_pred, y_test)
+#         acc_nn[-1].append(acc)
+#         print('NN:', acc, 'n:', n)
 
-acc_nn_avg = np.mean(np.array(acc_nn), axis=1)
-acc_nn_std = np.log(np.std(np.array(acc_nn), axis=1))
+# acc_nn_avg = np.mean(np.array(acc_nn), axis=1)
+# acc_nn_std = np.log(np.std(np.array(acc_nn), axis=1))
 
-df = pd.DataFrame({ 'acc_nn_avg':acc_nn_avg,
-                   'acc_nn_std':acc_nn_std})
+# df = pd.DataFrame({ 'acc_nn_avg':acc_nn_avg,
+#                    'acc_nn_std':acc_nn_std})
 
-df.to_csv(str(launchtime)+'nn.csv')
+# df.to_csv(str(launchtime)+'nn.csv')
 
 for i in iters:
     acc_knn.append([])
@@ -77,15 +77,28 @@ for i in iters:
         acc = accuracy_score(y_pred, y_test)
         acc_lda_gmm[-1].append(acc)
         print('LDA with GMM:', acc, 'n:', n)
-        LDA_sub = MyLDA(k_cluster)
-        LDA_sub.fit(X_train, y_train_sub)
-        y_pred = LDA_sub.predict(X_test)
-        acc = accuracy_score(y_pred, y_test)
-        acc_lda_mom[-1].append(acc)
-        print('LDA with MoM:', acc, 'n:', n)
+        # flag = False
+        # LDA_sub = MyLDA(k_cluster)
+        # LDA_sub.fit(X_train, y_train_sub)
+        # y_pred = LDA_sub.predict(X_test)
+        # acc = accuracy_score(y_pred, y_test)
+        # acc_lda_mom[-1].append(acc)
+        # print('LDA with MoM:', acc, 'n:', n)
+        # flag = True
+        # while flag is not True:
+        #     try:
+        #         LDA_sub = MyLDA(k_cluster)
+        #         LDA_sub.fit(X_train, y_train_sub)
+        #         y_pred = LDA_sub.predict(X_test)
+        #         acc = accuracy_score(y_pred, y_test)
+        #         acc_lda_mom[-1].append(acc)
+        #         print('LDA with MoM:', acc, 'n:', n)
+        #         flag = True
+        #     except:
+        #         print('error')
+        #         pass
         
         
-
 
 acc_lda_gmm_avg = np.mean(np.array(acc_lda_gmm), axis=1)
 acc_lda_gmm_std = np.log(np.std(np.array(acc_lda_gmm), axis=1))

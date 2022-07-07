@@ -125,12 +125,12 @@ class MyGMM(object):
         self.N, self.D = x.shape
         self.__init_params()
         for i in range(max_iter):
-            gamma = copy.deepcopy(self.params['gamma'])
+            mu = copy.deepcopy(self.params['mu'])
             self._E_step(x, label)
             self._M_step(x, label)
-            gamma_new =  copy.deepcopy(self.params['gamma'])
-            a = np.linalg.norm(np.exp(gamma)-np.exp(gamma_new))
-            if a < 0.02:
+            mu_new =  self.params['mu']
+            a = np.linalg.norm(mu-mu_new)
+            if a < 1e-4:
                 print(a,i)
                 break
             
